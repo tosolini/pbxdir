@@ -1,0 +1,79 @@
+fversion: 2
+updates:
+  # Backend Python (FastAPI)
+  - package-ecosystem: "pip"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "tosolini"
+    labels:
+      - "dependencies"
+      - "backend"
+    # Raggruppa gli aggiornamenti patch in una singola PR
+    groups:
+      patch-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+
+  # Frontend npm (React/Vite)
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "tosolini"
+    labels:
+      - "dependencies"
+      - "frontend"
+    # Raggruppa gli aggiornamenti patch in una singola PR
+    groups:
+      patch-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+    # Ignora aggiornamenti specifici se necessario
+    ignore:
+      # Esempio: ignora aggiornamenti major di React
+      # - dependency-name: "react"
+      #   update-types: ["version-update:semver-major"]
+
+  # Docker
+  - package-ecosystem: "docker"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 2
+    labels:
+      - "dependencies"
+      - "docker"
+
+  - package-ecosystem: "docker"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 2
+    labels:
+      - "dependencies"
+      - "docker"
+
+  # GitHub Actions (se ne aggiungi in futuro)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 2
+    labels:
+      - "dependencies"
+      - "ci"
