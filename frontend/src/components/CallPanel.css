@@ -1,0 +1,142 @@
+.call-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.call-panel h2 {
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.call-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.selected-contact {
+  width: 100%;
+  text-align: left;
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 2px solid #e5e7eb;
+}
+
+.contact-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.selected-contact .contact-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.detail-icon {
+  font-size: 1rem;
+  width: 1.5rem;
+  text-align: center;
+}
+
+.contact-number {
+  color: #3b82f6;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+}
+
+.contact-email {
+  color: #6b7280;
+}
+
+.contact-internal {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.contact-role {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.call-button {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: #10b981;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.call-button:hover {
+  background: #059669;
+  transform: scale(1.05);
+}
+
+.call-button:active {
+  transform: scale(0.95);
+}
+
+.call-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.call-button:disabled:hover {
+  transform: none;
+}
+
+.no-selection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 0.95rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .call-panel {
+    flex: none;
+    height: auto;
+    min-height: 200px;
+  }
+}

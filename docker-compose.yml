@@ -1,0 +1,38 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pbx-backend
+    ports:
+      - "8000:8000"
+    networks:
+      - pbx-network
+    restart: unless-stopped
+    volumes:
+      - ./numeri.json:/app/numeri.json
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pbx-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000/api
+    depends_on:
+      - backend
+    networks:
+      - pbx-network
+    restart: unless-stopped
+
+networks:
+  pbx-network:
+    driver: bridge

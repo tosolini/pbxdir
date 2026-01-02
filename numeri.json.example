@@ -1,0 +1,21 @@
+[
+    {
+        "id": 0,
+        "role": "Amministrazione",
+        "name": "Mario Rossi [Cellulare]",
+        "number": "3391234567",
+        "office": "0212345678",
+        "shortInternal": "201",
+        "email": "mario.rossi@example.com",
+        "department": "Admin"
+    },
+    {
+        "id": 1,
+        "role": "Supporto Tecnico",
+        "name": "Laura Bianchi [Centralino]",
+        "number": "3337778899",
+        "shortInternal": "301",
+        "email": "laura.bianchi@example.com",
+        "department": "IT"
+    }
+]
