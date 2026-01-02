@@ -1,4 +1,4 @@
-fversion: 2
+version: 2
 updates:
   # Backend Python (FastAPI)
   - package-ecosystem: "pip"
@@ -8,8 +8,6 @@ updates:
       day: "monday"
       time: "09:00"
     open-pull-requests-limit: 3
-    reviewers:
-      - "tosolini"
     labels:
       - "dependencies"
       - "backend"
@@ -29,8 +27,6 @@ updates:
       day: "monday"
       time: "09:00"
     open-pull-requests-limit: 3
-    reviewers:
-      - "tosolini"
     labels:
       - "dependencies"
       - "frontend"
@@ -41,11 +37,6 @@ updates:
           - "*"
         update-types:
           - "patch"
-    # Ignora aggiornamenti specifici se necessario
-    ignore:
-      # Esempio: ignora aggiornamenti major di React
-      # - dependency-name: "react"
-      #   update-types: ["version-update:semver-major"]
 
   # Docker
   - package-ecosystem: "docker"
@@ -68,7 +59,7 @@ updates:
       - "dependencies"
       - "docker"
 
-  # GitHub Actions (se ne aggiungi in futuro)
+  # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
