@@ -1,117 +1,117 @@
-# Configurazione
+# Configuration
 
-Guida di configurazione per Rubrica Telefonica.
+Configuration guide for Phone Directory.
 
 ## Environment Variables
 
 ### Backend
 
-Crea `backend/.env`:
+Create `backend/.env`:
 
 ```env
 PBX_HOST=192.168.1.1
 PBX_PORT=5038
-PBX_USER=admin
+PBX_USERNAME=admin
 PBX_PASSWORD=manager
 ```
 
-#### Variabili Disponibili
+#### Available Variables
 
-| Variable | Default | Descrizione |
+| Variable | Default | Description |
 |----------|---------|-------------|
-| `PBX_HOST` | 192.168.1.1 | Indirizzo IP o hostname della PBX |
-| `PBX_PORT` | 5038 | Porta Asterisk Manager |
-| `PBX_USER` | admin | Username AMI |
-| `PBX_PASSWORD` | manager | Password AMI |
+| `PBX_HOST` | 192.168.1.1 | PBX IP address or hostname |
+| `PBX_PORT` | 5038 | Asterisk Manager port |
+| `PBX_USERNAME` | admin | AMI username |
+| `PBX_PASSWORD` | manager | AMI password |
 
 ### Frontend
 
-URL backend configurato in `src/App.jsx`:
+Backend URL configured in `src/App.jsx`:
 
 ```javascript
 const API_URL = 'http://192.168.1.1:8000'
 ```
 
-Per modificare, edita il file e ricostruisci:
+To modify, edit the file and rebuild:
 
 ```bash
-# Modifica
+# Edit
 nano frontend/src/App.jsx
 
-# Ricostruisci
+# Rebuild
 docker compose down && docker compose up -d --build
 ```
 
 ---
 
-## Contatti (numeri.json)
+## Contacts (numeri.json)
 
-### Struttura
+### Structure
 
 ```json
 [
   {
     "id": 0,
-    "name": "Nome [Tipo]",
+    "name": "Name [Type]",
     "number": "3351234567",
     "office": "021345678",
     "shortInternal": "101",
     "email": "user@company.com",
-    "role": "Ruolo",
-    "department": "Reparto"
+    "role": "Role",
+    "department": "Department"
   }
 ]
 ```
 
-### Campi
+### Fields
 
-| Campo | Tipo | Obbligatorio | Descrizione |
-|-------|------|--------------|-------------|
-| `id` | number | ✅ | ID univoco contatto |
-| `name` | string | ✅ | Nome visualizzato (aggiungi tipo in []) |
-| `number` | string | ✅ | Numero principale (cellulare) |
-| `office` | string | ❌ | Numero ufficio |
-| `shortInternal` | string | ❌ | Interno centralino |
-| `email` | string | ❌ | Indirizzo email (cliccabile) |
-| `role` | string | ❌ | Ruolo/Titolo |
-| `department` | string | ❌ | Reparto |
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | number | ✅ | Unique contact ID |
+| `name` | string | ✅ | Display name (add type in []) |
+| `number` | string | ✅ | Main number (mobile) |
+| `office` | string | ❌ | Office number |
+| `shortInternal` | string | ❌ | Switchboard extension |
+| `email` | string | ❌ | Email address (clickable) |
+| `role` | string | ❌ | Role/Title |
+| `department` | string | ❌ | Department |
 
-### Esempi
+### Examples
 
-**Contatto semplice (solo cellulare):**
+**Simple contact (mobile only):**
 
 ```json
 {
   "id": 5,
-  "name": "Mario Rossi",
+  "name": "John Smith",
   "number": "33351234567",
-  "email": "mario.rossi@company.com",
-  "role": "Tecnico",
+  "email": "john.smith@company.com",
+  "role": "Technician",
   "department": "IT"
 }
 ```
 
-**Contatto completo (multipli numeri):**
+**Complete contact (multiple numbers):**
 
 ```json
 {
   "id": 0,
-  "name": "Elena Bianchi [Cellulare]",
+  "name": "Jane Doe [Mobile]",
   "number": "33512345679",
   "office": "0431234455677",
   "shortInternal": "201",
-  "email": "bianchi@company.com",
-  "role": "Direttore",
-  "department": "Amministrazione"
+  "email": "jane@company.com",
+  "role": "Director",
+  "department": "Administration"
 }
 ```
 
-**Contatto interno (solo interno):**
+**Internal contact (extension only):**
 
 ```json
 {
   "id": 20,
-  "name": "Supporto Tecnico [Interno]",
+  "name": "Technical Support [Internal]",
   "shortInternal": "999",
   "email": "support@company.com",
   "role": "Help Desk",
@@ -119,62 +119,62 @@ docker compose down && docker compose up -d --build
 }
 ```
 
-### Aggiunta Contatti
+### Adding Contacts
 
-1. Modifica `backend/numeri.json`
-2. Aggiungi nuova voce nell'array
-3. Ricarica il browser (no restart necessario)
+1. Edit `backend/numeri.json`
+2. Add new entry to the array
+3. Reload browser (no restart needed)
 
 ```bash
-# Modifica
+# Edit
 nano backend/numeri.json
 
-# Valida JSON
+# Validate JSON
 jq . backend/numeri.json
 
-# Salva (Ctrl+X, Y, Enter in nano)
+# Save (Ctrl+X, Y, Enter in nano)
 ```
 
 ---
 
 ## FreePBX/Asterisk
 
-### Configurazione Utente AMI
+### AMI User Configuration
 
-1. Accedi a FreePBX come admin
-2. Vai a: **Admin → Settings → Asterisk Manager → Users**
-3. Crea nuovo utente:
+1. Log in to FreePBX as admin
+2. Go to: **Admin → Settings → Asterisk Manager → Users**
+3. Create new user:
    - **Username**: admin
    - **Secret**: manager
-   - **Read Permissions**: Attiva tutte
+   - **Read Permissions**: Enable all
    - **Write Permissions**: originate
 
-4. Salva e applica
+4. Save and apply
 
-### Configurazione Numero Esterno
+### External Number Configuration
 
-Per ricevere chiamate esterne correttamente:
+To receive external calls correctly:
 
-1. Vai a: **Admin → Connectivity → Trunk**
-2. Configura il trunk con lo stesso numero esterno
-3. Verifica in: **Admin → Settings → Advanced Settings → Outbound Caller ID**
+1. Go to: **Admin → Connectivity → Trunk**
+2. Configure trunk with the same external number
+3. Verify in: **Admin → Settings → Advanced Settings → Outbound Caller ID**
 
-### Verifica Manager
+### Verify Manager
 
 ```bash
-# Accedi al server Asterisk
+# Access Asterisk server
 ssh asterisk-server
 
-# Connettiti a Asterisk CLI
+# Connect to Asterisk CLI
 asterisk -r
 
-# Verifica manager status
+# Verify manager status
 manager list
 
-# Verifica permessi utente
+# Verify user permissions
 manager list connected
 
-# Esci
+# Exit
 exit
 exit
 ```
@@ -183,30 +183,30 @@ exit
 
 ## Docker Compose
 
-### Configurazione di Rete
+### Network Configuration
 
-Per cambiare porta di accesso, modifica `docker-compose.yml`:
+To change access port, modify `docker-compose.yml`:
 
 ```yaml
 services:
   frontend:
     ports:
-      - "3000:3000"    # Cambia a "8080:3000" per accesso su porta 8080
+      - "3000:3000"    # Change to "8080:3000" for access on port 8080
 
   backend:
     ports:
-      - "8000:8000"    # Cambia a "8001:8000" per accesso su porta 8001
+      - "8000:8000"    # Change to "8001:8000" for access on port 8001
 ```
 
-Poi riavvia:
+Then restart:
 
 ```bash
 docker compose down && docker compose up -d --build
 ```
 
-### Variabili Ambiente nel Container
+### Environment Variables in Container
 
-Per aggiungere variabili, modifica `docker-compose.yml`:
+To add variables, modify `docker-compose.yml`:
 
 ```yaml
 services:
@@ -214,7 +214,7 @@ services:
     environment:
       - PBX_HOST=192.168.1.1
       - PBX_PORT=5038
-      - PBX_USER=admin
+      - PBX_USERNAME=admin
       - PBX_PASSWORD=manager
 ```
 
@@ -222,7 +222,7 @@ services:
 
 ## Python Backend
 
-### Dipendenze
+### Dependencies
 
 File: `backend/requirements.txt`
 
@@ -234,13 +234,13 @@ python-dotenv==1.0.0
 pydantic-settings==2.0.0
 ```
 
-Per aggiungere dipendenze:
+To add dependencies:
 
-1. Edita `requirements.txt`
-2. Aggiungi nuova linea
-3. Ricostruisci: `docker compose up -d --build backend`
+1. Edit `requirements.txt`
+2. Add new line
+3. Rebuild: `docker compose up -d --build backend`
 
-### Variabili Configurazione
+### Configuration Variables
 
 File: `backend/config.py`
 
@@ -248,7 +248,7 @@ File: `backend/config.py`
 class Settings(BaseSettings):
     PBX_HOST: str = "192.168.1.1"
     PBX_PORT: int = 5038
-    PBX_USER: str = "admin"
+    PBX_USERNAME: str = "admin"
     PBX_PASSWORD: str = "manager"
     
     class Config:
@@ -268,9 +268,9 @@ File: `frontend/src/App.jsx`
 const API_URL = 'http://10.0.110.2:8000'
 ```
 
-Cambia per una nuova istanza.
+Change for a new instance.
 
-### Configurazione Vite
+### Vite Configuration
 
 File: `frontend/vite.config.js`
 
@@ -288,22 +288,22 @@ export default defineConfig({
 
 ---
 
-## Temi
+## Themes
 
 ### Dark Mode
 
-Abilitato tramite toggle UI. Salvato in localStorage con chiave `darkMode`.
+Enabled via UI toggle. Saved in localStorage with key `darkMode`.
 
-Per forzare dark mode:
+To force dark mode:
 
 ```javascript
 // In App.jsx
-const [darkMode, setDarkMode] = useState(() => true)  // Forza true
+const [darkMode, setDarkMode] = useState(() => true)  // Force true
 ```
 
-### Colori Tema Scuro
+### Dark Theme Colors
 
-Definiti in `src/index.css`:
+Defined in `src/index.css`:
 
 ```css
 body.dark-mode {
@@ -312,22 +312,22 @@ body.dark-mode {
 }
 ```
 
-Modifica per personalizzare colori.
+Modify to customize colors.
 
 ---
 
-## Persistenza Locale
+## Local Persistence
 
 ### localStorage
 
-L'app salva in localStorage:
+The app saves in localStorage:
 
-| Chiave | Valore | Descrizione |
-|--------|--------|-------------|
-| `userExtension` | string | Interno utente |
-| `darkMode` | boolean | Tema preferito |
+| Key | Value | Description |
+|-----|-------|-------------|
+| `userExtension` | string | User extension |
+| `darkMode` | boolean | Preferred theme |
 
-Per pulire (console browser):
+To clear (browser console):
 
 ```javascript
 localStorage.removeItem('userExtension')
@@ -336,19 +336,19 @@ localStorage.removeItem('darkMode')
 
 ---
 
-## Certificati SSL (Produzione)
+## SSL Certificates (Production)
 
-Per HTTPS, genera certificati:
+For HTTPS, generate certificates:
 
 ```bash
-# Self-signed (sviluppo)
+# Self-signed (development)
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
 
-# Let's Encrypt (produzione)
-sudo certbot certonly --standalone -d rubrica.tuodominio.com
+# Let's Encrypt (production)
+sudo certbot certonly --standalone -d directory.yourdomain.com
 ```
 
-Poi configura reverse proxy (nginx/apache) con HTTPS.
+Then configure reverse proxy (nginx/apache) with HTTPS.
 
 ---
 
@@ -356,7 +356,7 @@ Poi configura reverse proxy (nginx/apache) con HTTPS.
 
 ### Backend
 
-Logs disponibili tramite Docker:
+Logs available via Docker:
 
 ```bash
 docker compose logs backend -f
@@ -381,11 +381,11 @@ console.log('PBX Status:', pbxStatus)
 
 ---
 
-## Sicurezza
+## Security
 
-### Credenziali
+### Credentials
 
-**MAI** committare `.env` in git:
+**NEVER** commit `.env` to git:
 
 ```bash
 echo "backend/.env" >> .gitignore
@@ -393,21 +393,21 @@ echo "backend/.env" >> .gitignore
 
 ### Firewall
 
-Apri solo porte necessarie:
+Open only necessary ports:
 
 ```bash
 sudo ufw allow 3000/tcp  # Frontend
-sudo ufw allow 8000/tcp  # Backend (se accessibile esternamente)
+sudo ufw allow 8000/tcp  # Backend (if externally accessible)
 ```
 
 ### CORS
 
-Restringi in produzione (`main.py`):
+Restrict in production (`main.py`):
 
 ```python
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://rubrica.tuodominio.com"],
+    allow_origins=["https://directory.yourdomain.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -418,62 +418,62 @@ app.add_middleware(
 
 ## Troubleshooting
 
-### PBX non si connette
+### PBX won't connect
 
-1. Verifica `.env`:
+1. Verify `.env`:
    ```bash
    cat backend/.env
    ```
 
-2. Verifica raggiungibilità:
+2. Verify reachability:
    ```bash
    telnet 192.168.1.1 5038
    ```
 
-3. Verifica credenziali in FreePBX
+3. Verify credentials in FreePBX
 
-4. Leggi logs:
+4. Read logs:
    ```bash
    docker compose logs backend
    ```
 
-### Contatti non caricano
+### Contacts not loading
 
-1. Valida JSON:
+1. Validate JSON:
    ```bash
    jq . backend/numeri.json
    ```
 
-2. Verifica API:
+2. Verify API:
    ```bash
    curl http://localhost:8000/api/contacts
    ```
 
-3. Controlla browser console (F12)
+3. Check browser console (F12)
 
-### Tema non persiste
+### Theme doesn't persist
 
-Svuota localStorage:
+Clear localStorage:
 
 ```javascript
-// Console browser
+// Browser console
 localStorage.clear()
 location.reload()
 ```
 
 ---
 
-## Reset Configurazione
+## Reset Configuration
 
-Per resettare tutto ai defaults:
+To reset everything to defaults:
 
 ```bash
-# Rimuovi container e volumi
+# Remove container and volumes
 docker compose down -v
 
-# Ripristina .env di default
-cp backend/.env.example backend/.env  # Se esiste
+# Restore default .env
+cp backend/.env.example backend/.env  # If exists
 
-# Riavvia
+# Restart
 docker compose up -d --build
 ```

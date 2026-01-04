@@ -1,139 +1,139 @@
-# Quick Start - Rubrica Telefonica
+# Quick Start - Phone Directory
 
-Guida rapida per installare e eseguire la Rubrica Telefonica su un nuovo server.
+Quick guide to install and run Phone Directory on a new server.
 
-## 📋 Prerequisiti
+## 📋 Prerequisites
 
-- **Docker**: versione 20.10+
-- **Docker Compose**: versione 1.29+
-- **Accesso FreePBX/Asterisk**: con AMI abilitato
-- **Rete**: accesso alla PBX sulla porta 5038
+- **Docker**: version 20.10+
+- **Docker Compose**: version 1.29+
+- **FreePBX/Asterisk access**: with AMI enabled
+- **Network**: access to PBX on port 5038
 
-## 🚀 Installazione (5 minuti)
+## 🚀 Installation (5 minutes)
 
-### 1. Clona o copia il repository
+### 1. Clone or copy the repository
 
 ```bash
-# Se hai accesso git
+# If you have git access
 git clone <repository-url> pbxdir
 cd pbxdir
 
-# Oppure copia i file manualmente
+# Or copy files manually
 cd /path/to/pbxdir
 ```
 
-### 2. Configura la connessione FreePBX
+### 2. Configure FreePBX connection
 
-Crea o modifica `backend/.env`:
+Create or modify `backend/.env`:
 
 ```bash
 cat > backend/.env << 'EOF'
 PBX_HOST=192.168.1.1
 PBX_PORT=5038
-PBX_USER=admin
+PBX_USERNAME=admin
 PBX_PASSWORD=manager
 EOF
 ```
 
-**Sostituisci i valori con i dati del tuo FreePBX:**
-- `PBX_HOST`: IP o hostname della PBX
-- `PBX_PORT`: Porta AMI (default 5038)
-- `PBX_USER`: Utente AMI configurato in FreePBX
-- `PBX_PASSWORD`: Password utente AMI
+**Replace values with your FreePBX data:**
+- `PBX_HOST`: IP or hostname of the PBX
+- `PBX_PORT`: AMI port (default 5038)
+- `PBX_USERNAME`: AMI user configured in FreePBX
+- `PBX_PASSWORD`: AMI user password
 
-### 3. Configura i contatti
+### 3. Configure contacts
 
-Modifica `backend/numeri.json` con i tuoi contatti:
+Modify `backend/numeri.json` with your contacts:
 
 ```json
 [
   {
     "id": 0,
-    "name": "Mario Rossi [Cellulare]",
+    "name": "John Smith [Mobile]",
     "number": "3391234567",
     "office": "0212345678",
     "shortInternal": "201",
-    "email": "mario.rossi@company.com",
-    "role": "Direttore",
-    "department": "Direzione"
+    "email": "john.smith@company.com",
+    "role": "Director",
+    "department": "Management"
   }
 ]
 ```
 
-**Campi**:
-- `id`: Numero univoco
-- `name`: Nome contatto (aggiungi tipo tra parentesi)
-- `number`: Numero cellulare/principale
-- `office`: Numero ufficio (opzionale)
-- `shortInternal`: Interno centralino (opzionale)
-- `email`: Email (cliccabile)
-- `role`: Ruolo/Titolo
-- `department`: Reparto
+**Fields**:
+- `id`: Unique number
+- `name`: Contact name (add type in brackets)
+- `number`: Mobile/main number
+- `office`: Office number (optional)
+- `shortInternal`: Switchboard extension (optional)
+- `email`: Email (clickable)
+- `role`: Role/Title
+- `department`: Department
 
-### 4. Avvia i container
+### 4. Start the containers
 
 ```bash
-# Da dentro la directory pbxdir
+# From inside the pbxdir directory
 docker compose up -d --build
 
-# Verifica che siano avviati
+# Verify they are running
 docker compose ps
 ```
 
-Dovresti vedere:
+You should see:
 ```
 NAME                   STATUS
 pbx-backend           Up
 pbx-frontend          Up
 ```
 
-### 5. Verifica l'installazione
+### 5. Verify the installation
 
 ```bash
 # Test backend
 curl http://localhost:8000/api/health
-# Dovrebbe rispondere: {"status":"ok"}
+# Should respond: {"status":"ok"}
 
-# Test contatti
+# Test contacts
 curl http://localhost:8000/api/contacts | jq . | head -20
 
-# Test connessione PBX
+# Test PBX connection
 curl http://localhost:8000/api/status
-# Dovrebbe mostrare lo stato AMI (connected/disconnected)
+# Should show AMI status (connected/disconnected)
 ```
 
-### 6. Accedi all'interfaccia
+### 6. Access the interface
 
-Apri il browser:
+Open your browser:
 ```
 http://localhost:3000
 ```
 
-## 🔧 Configurazione Avanzata
+## 🔧 Advanced Configuration
 
-### Cambia IP/Porta Accesso
+### Change IP/Port Access
 
-Modifica `docker-compose.yml`:
+Modify `docker-compose.yml`:
 
 ```yaml
 services:
   frontend:
     ports:
-      - "8080:3000"  # Accesso su http://localhost:8080
+      - "8080:3000"  # Access at http://localhost:8080
 
   backend:
     ports:
-      - "8001:8000"  # Accesso su http://localhost:8001
+      - "8001:8000"  # Access at http://localhost:8001
 ```
 
-Poi riavvia:
+Then restart:
 ```bash
 docker compose down && docker compose up -d --build
 ```
 
-### Rete Personalizzata
+### Custom Network
 
-Se la PBX è su una rete diversa, modifica docker-compose.yml:
+If the PBX is on a different network, modify docker-compose.yml:
 
 ```yaml
 services:
@@ -146,29 +146,29 @@ networks:
     driver: bridge
 ```
 
-### Usa il tuo dominio
+### Use your own domain
 
-Modifica `frontend/src/App.jsx`:
+Modify `frontend/src/App.jsx`:
 
 ```javascript
-const API_URL = 'http://tuodominio.com:8000'  // o https
+const API_URL = 'http://yourdomain.com:8000'  // or https
 ```
 
-Poi ricostruisci:
+Then rebuild:
 ```bash
 docker compose down && docker compose up -d --build
 ```
 
-## 🔐 Sicurezza in Produzione
+## 🔐 Security in Production
 
-### HTTPS per Frontend
+### HTTPS for Frontend
 
-Usa un reverse proxy (nginx/apache):
+Use a reverse proxy (nginx/apache):
 
 ```nginx
 server {
   listen 443 ssl;
-  server_name rubrica.tuodominio.com;
+  server_name directory.yourdomain.com;
   
   ssl_certificate /path/to/cert.pem;
   ssl_certificate_key /path/to/key.pem;
@@ -179,236 +179,236 @@ server {
 }
 ```
 
-### HTTPS per Backend
+### HTTPS for Backend
 
-Aggiungi certificati a docker-compose.yml se necessario.
+Add certificates to docker-compose.yml if necessary.
 
 ### Firewall
 
-Apri solo le porte necessarie:
+Open only necessary ports:
 
 ```bash
-# Frontend (accesso da LAN/VPN)
+# Frontend (access from LAN/VPN)
 sudo ufw allow from 192.168.1.0/24 to any port 3000
 
-# Backend (accesso solo da frontend container, non esporre)
-# Rimani sulla rete Docker interna
+# Backend (access only from frontend container, don't expose)
+# Stay on Docker internal network
 ```
 
-### Credenziali Sicure
+### Secure Credentials
 
-Non committare `.env` in git:
+Don't commit `.env` to git:
 
 ```bash
 echo "backend/.env" >> .gitignore
 ```
 
-Usa secret management per produzione (Docker secrets, Vault, etc).
+Use secret management for production (Docker secrets, Vault, etc).
 
 ## 📊 Monitoring
 
-### Leggi i log
+### Read the logs
 
 ```bash
-# Tutti i servizi
+# All services
 docker compose logs
 
-# Solo backend
+# Backend only
 docker compose logs backend -f
 
-# Solo frontend
+# Frontend only
 docker compose logs frontend -f
 
-# Ultime 20 righe
+# Last 20 lines
 docker compose logs --tail 20
 ```
 
-### Verifica lo stato PBX
+### Check PBX status
 
 ```bash
-# Connessione PBX
+# PBX connection
 curl http://localhost:8000/api/status
 
-# Contatti caricati
+# Contacts loaded
 curl http://localhost:8000/api/contacts | jq '. | length'
 ```
 
 ## 🆘 Troubleshooting
 
-### Container non si avviano
+### Containers won't start
 
 ```bash
-# Vedi errori
+# See errors
 docker compose logs
 
-# Ricostruisci forzatamente
+# Force rebuild
 docker compose down
 docker compose up -d --build
 
-# Pulisci immagini non utilizzate
+# Clean unused images
 docker system prune -a
 ```
 
-### Connessione PBX fallisce
+### PBX connection fails
 
-1. Verifica `backend/.env`:
+1. Verify `backend/.env`:
    ```bash
    cat backend/.env
    ```
 
-2. Verifica raggiungibilità PBX:
+2. Verify PBX reachability:
    ```bash
    telnet 192.168.1.1 5038
    ```
 
-3. Verifica credenziali in FreePBX:
-   - Vedi: Admin → Settings → Asterisk Manager → Users
+3. Verify credentials in FreePBX:
+   - Go to: Admin → Settings → Asterisk Manager → Users
 
-4. Abilita AMI se disabilitato:
+4. Enable AMI if disabled:
    - Config file: `/etc/asterisk/manager.conf`
-   - Riavvia Asterisk: `asterisk -r` → `core restart now`
+   - Restart Asterisk: `asterisk -r` → `core restart now`
 
-### API non raggiungibile
+### API not reachable
 
 ```bash
-# Verifica container in esecuzione
+# Verify running containers
 docker compose ps
 
-# Verifica porta
+# Verify port
 netstat -tuln | grep 8000
 
-# Se necessario, riavvia
+# If needed, restart
 docker compose restart backend
 ```
 
-### Frontend non carica contatti
+### Frontend won't load contacts
 
-1. Verifica URL API in `src/App.jsx`
-2. Controlla CORS in backend
-3. Verifica `numeri.json` esiste in `backend/`
-4. Leggi log: `docker compose logs backend`
+1. Verify API URL in `src/App.jsx`
+2. Check CORS in backend
+3. Verify `numeri.json` exists in `backend/`
+4. Read logs: `docker compose logs backend`
 
-## 🔄 Aggiornamenti
+## 🔄 Updates
 
-### Aggiorna contatti
+### Update contacts
 
-1. Modifica `backend/numeri.json`
-2. Non è necessario riavviare, i cambiamenti sono ricaricati
-3. Ricarica il browser per vedere i nuovi contatti
+1. Modify `backend/numeri.json`
+2. No restart necessary, changes are reloaded
+3. Reload browser to see new contacts
 
-### Aggiorna configurazione PBX
+### Update PBX configuration
 
-1. Modifica `backend/.env`
-2. Riavvia backend:
+1. Modify `backend/.env`
+2. Restart backend:
    ```bash
    docker compose restart backend
    ```
 
-### Aggiorna codice
+### Update code
 
 ```bash
-# Pull ultimi cambiamenti
+# Pull latest changes
 git pull origin main
 
-# Ricostruisci
+# Rebuild
 docker compose down && docker compose up -d --build
 ```
 
 ## 📦 Backup
 
-### Salva i contatti
+### Save contacts
 
 ```bash
 cp backend/numeri.json backup/numeri.json.$(date +%Y%m%d)
 ```
 
-### Salva la configurazione
+### Save configuration
 
 ```bash
 cp backend/.env backup/.env.$(date +%Y%m%d)
 ```
 
-## 🛑 Arresto/Avvio
+## 🛑 Stop/Start
 
-### Arresta i container
+### Stop containers
 
 ```bash
 docker compose down
 ```
 
-### Avvia i container
+### Start containers
 
 ```bash
 docker compose up -d
 ```
 
-### Riavvia i container
+### Restart containers
 
 ```bash
 docker compose restart
 ```
 
-## 📚 Comandi Utili
+## 📚 Useful Commands
 
 ```bash
-# Status dettagliato
+# Detailed status
 docker compose ps -a
 
-# Logs in tempo reale
+# Real-time logs
 docker compose logs -f
 
-# Esegui comando nel container
+# Execute command in container
 docker compose exec backend python -c "..."
 
-# Accedi shell container
+# Access container shell
 docker compose exec backend /bin/bash
 
-# Ricostruisci singolo servizio
+# Rebuild single service
 docker compose up -d --build backend
 ```
 
-## 🎓 Prossimi Passi
+## 🎓 Next Steps
 
-1. **Test una chiamata**: Configura un interno, seleziona un contatto e clicca "Chiama"
-2. **Personalizza tema**: Usa il toggle light/dark mode
-3. **Aggiungi contatti**: Modifica `numeri.json` e ricarica browser
-4. **Abilita HTTPS**: Configura reverse proxy per sicurezza
+1. **Test a call**: Configure an extension, select a contact and click "Call"
+2. **Customize theme**: Use the light/dark mode toggle
+3. **Add contacts**: Modify `numeri.json` and reload browser
+4. **Enable HTTPS**: Configure reverse proxy for security
 
-## 📞 Requisiti Asterisk/FreePBX
+## 📞 Asterisk/FreePBX Requirements
 
-Verifiche di base sul server FreePBX:
+Basic checks on FreePBX server:
 
 ```bash
-# Accedi al server FreePBX via SSH
+# SSH to FreePBX server
 
-# Verifica Asterisk in esecuzione
+# Verify Asterisk is running
 systemctl status asterisk
 
-# Verifica manager.conf
+# Verify manager.conf
 cat /etc/asterisk/manager.conf | grep -A 5 "admin"
 
-# Riavvia Asterisk se necessario
+# Restart Asterisk if needed
 asterisk -r
 core restart now
 exit
 ```
 
-## ✅ Checklist Finale
+## ✅ Final Checklist
 
-- [ ] Docker e Docker Compose installati
-- [ ] Repository clonato/copiato
-- [ ] `.env` configurato con PBX corretta
-- [ ] `numeri.json` popolato con contatti
-- [ ] `docker compose up -d` eseguito con successo
-- [ ] http://localhost:3000 raggiungibile
-- [ ] `/api/status` mostra "connected"
-- [ ] Contatti visibili nella lista
-- [ ] Test una chiamata con successo
-- [ ] Tema light/dark funziona
-- [ ] Email cliccabili funzionano
+- [ ] Docker and Docker Compose installed
+- [ ] Repository cloned/copied
+- [ ] `.env` configured with correct PBX
+- [ ] `numeri.json` populated with contacts
+- [ ] `docker compose up -d` executed successfully
+- [ ] http://localhost:3000 is accessible
+- [ ] `/api/status` shows "connected"
+- [ ] Contacts visible in list
+- [ ] Test a call successfully
+- [ ] Light/dark theme works
+- [ ] Clickable emails work
 
-## 🚀 Sei pronto!
+## 🚀 You're ready!
 
-Sei ora pronto a usare Rubrica Telefonica. Consulta [README.md](README.md) per documentazione completa.
+You are now ready to use Phone Directory. Consult [README.md](README.md) for complete documentation.
 
-Buon utilizzo! 📞
+Enjoy! 📞

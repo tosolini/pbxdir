@@ -12,7 +12,7 @@ contacts_manager = ContactsManager(contacts_file="numeri.json")
 pbx_manager = PBXManager(
     host=settings.PBX_HOST,
     port=settings.PBX_PORT,
-    user=settings.PBX_USER,
+    user=settings.PBX_USERNAME,
     password=settings.PBX_PASSWORD
 )
 

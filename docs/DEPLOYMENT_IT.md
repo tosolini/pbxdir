@@ -1,11 +1,11 @@
 # Deployment
 
-Guide to deploy Phone Directory in different environments.
+Guida per distribuire Rubrica Telefonica in ambienti diversi.
 
-## Supported Environments
+## Ambienti Supportati
 
-- ✅ Local development
-- ✅ Internal server (same network as FreePBX)
+- ✅ Development locale
+- ✅ Server interno (stesso network di FreePBX)
 - ✅ Cloud (AWS, Azure, DigitalOcean)
 - ✅ Docker Swarm
 - ✅ Kubernetes
@@ -16,7 +16,7 @@ Guide to deploy Phone Directory in different environments.
 # Clone repository
 git clone <repo> pbxdir && cd pbxdir
 
-# Configure .env
+# Configura .env
 cat > backend/.env << 'EOF'
 PBX_HOST=192.168.1.1
 PBX_PORT=5038
@@ -24,65 +24,65 @@ PBX_USERNAME=admin
 PBX_PASSWORD=manager
 EOF
 
-# Start
+# Avvia
 docker compose up -d --build
 
-# Access
+# Accedi
 open http://localhost:3000
 ```
 
 ---
 
-## Internal Server (LAN/Intranet)
+## Server Interno (LAN/Intranet)
 
-Deployment on physical server in the same network as the PBX.
+Deployment su server fisico nella stessa rete della PBX.
 
-### Prerequisites
+### Prerequisiti
 
-- Linux server (Ubuntu 20.04+, CentOS 7+)
+- Server Linux (Ubuntu 20.04+, CentOS 7+)
 - Docker 20.10+
 - Docker Compose 1.29+
-- Network connection with FreePBX
+- Connessione di rete con FreePBX
 
-### Installation
+### Installazione
 
 ```bash
-# 1. Install Docker
+# 1. Installa Docker
 sudo apt update
 sudo apt install docker.io docker-compose -y
 
-# 2. Clone repository
+# 2. Clona repository
 git clone <repo> /opt/pbxdir
 cd /opt/pbxdir
 
-# 3. Configure
+# 3. Configura
 sudo nano backend/.env
-# PBX_HOST=<pbx-ip>
+# PBX_HOST=<ip-pbx>
 # PBX_PORT=5038
 # PBX_USERNAME=admin
 # PBX_PASSWORD=manager
 
-# 4. Start (as root or with sudo)
+# 4. Avvia (come root o con sudo)
 sudo docker compose up -d --build
 
-# 5. Verify
+# 5. Verifica
 sudo docker compose ps
 curl http://localhost:8000/api/status
 ```
 
-### Intranet Access
+### Accesso Intranet
 
 **URL**: `http://<server-ip>:3000`
 
-Access from any PC on the LAN.
+Accedi da qualsiasi PC sulla LAN.
 
-### Auto-Start on Reboot
+### Auto-Start al Riavvio
 
 ```bash
-# Create systemd service
+# Crea systemd service
 sudo tee /etc/systemd/system/pbxdir.service > /dev/null << 'EOF'
 [Unit]
-Description=Phone Directory
+Description=Rubrica Telefonica
 After=docker.service
 Requires=docker.service
 
@@ -98,12 +98,12 @@ User=root
 WantedBy=multi-user.target
 EOF
 
-# Enable
+# Abilita
 sudo systemctl daemon-reload
 sudo systemctl enable pbxdir.service
 sudo systemctl start pbxdir.service
 
-# Verify
+# Verifica
 sudo systemctl status pbxdir.service
 ```
 
@@ -111,48 +111,48 @@ sudo systemctl status pbxdir.service
 
 ## Cloud (AWS, Azure, DigitalOcean)
 
-### Create Instance
+### Creazione Istanza
 
 #### AWS EC2
 
-1. Launch Ubuntu 20.04 instance
+1. Avvia istanza Ubuntu 20.04
 2. Security Group:
-   - Inbound: port 22 (SSH), 3000 (HTTP), 8000 (API optional)
-   - Outbound: All (to reach PBX)
+   - Inbound: port 22 (SSH), 3000 (HTTP), 8000 (API opzionale)
+   - Outbound: All (per raggiungere PBX)
 
 #### DigitalOcean Droplet
 
-1. Select Ubuntu 20.04
-2. Size: Basic ($4-6/month)
-3. Network: Same VPC as PBX
+1. Seleziona Ubuntu 20.04
+2. Size: Basic ($4-6/mese)
+3. Network: In stessa VPC della PBX
 
 #### Azure
 
-1. Linux VM (Ubuntu 20.04)
+1. VM Linux (Ubuntu 20.04)
 2. Inbound Rules: port 22, 3000
-3. Subnet: In PBX network or with VPN
+3. Subnet: In rete della PBX o con VPN
 
-### Cloud Installation
+### Installazione Cloud
 
 ```bash
-# SSH to server
+# SSH nel server
 ssh ubuntu@<public-ip>
 
-# Install Docker
+# Installa Docker
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 sudo usermod -aG docker ubuntu
 sudo apt install docker-compose -y
 
-# Clone and configure
+# Clone e configura
 git clone <repo> ~/pbxdir
 cd ~/pbxdir
 nano backend/.env
 
-# Start
+# Avvia
 docker compose up -d --build
 
-# Enable firewall
+# Abilita firewall
 sudo ufw allow 22/tcp
 sudo ufw allow 3000/tcp
 sudo ufw enable
@@ -160,20 +160,20 @@ sudo ufw enable
 
 ---
 
-## HTTPS (Production)
+## HTTPS (Produzione)
 
-### With Reverse Proxy (Nginx)
+### Con Reverse Proxy (Nginx)
 
 ```bash
-# Install Nginx
+# Installa Nginx
 sudo apt install nginx certbot python3-certbot-nginx -y
 
-# Configure domain
+# Configura dominio
 sudo nano /etc/nginx/sites-available/rubrica
 
 server {
     listen 80;
-    server_name directory.yourdomain.com;
+    server_name rubrica.tuodominio.com;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -185,27 +185,27 @@ server {
     }
 }
 
-# Enable
+# Abilita
 sudo ln -s /etc/nginx/sites-available/rubrica /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
 
-# Obtain SSL certificate
-sudo certbot --nginx -d directory.yourdomain.com
+# Ottieni certificato SSL
+sudo certbot --nginx -d rubrica.tuodominio.com
 
 # Auto-renewal
 sudo systemctl enable certbot.timer
 ```
 
-### API HTTPS Configuration
+### Configurazione API HTTPS
 
-Modify `frontend/src/App.jsx`:
+Modifica `frontend/src/App.jsx`:
 
 ```javascript
-const API_URL = 'https://directory.yourdomain.com:8000'
+const API_URL = 'https://rubrica.tuodominio.com:8000'
 ```
 
-Or expose API through same domain:
+O esponi API tramite stesso dominio:
 
 ```nginx
 location /api/ {
@@ -217,25 +217,25 @@ location /api/ {
 
 ## Load Balancing
 
-For high availability with multiple servers:
+Per alta disponibilità con multipli server:
 
 ### Docker Swarm
 
 ```bash
-# Initialize swarm
+# Inizializza swarm
 docker swarm init
 
-# Deploy as service
+# Deploy come service
 docker stack deploy -c docker-compose.yml pbx
 
-# Scale replicas
+# Scala replicas
 docker service scale pbx_backend=3
 docker service scale pbx_frontend=3
 ```
 
 ### Kubernetes
 
-Create `k8s-deployment.yaml`:
+Crea `k8s-deployment.yaml`:
 
 ```yaml
 apiVersion: apps/v1
@@ -287,14 +287,14 @@ kubectl get services
 
 ---
 
-## External Database (Optional)
+## Database Esterno (Opzionale)
 
-To store contacts in database:
+Per archiviare contatti in database:
 
 ### PostgreSQL
 
 ```bash
-# Add to docker-compose.yml
+# Aggiungi a docker-compose.yml
   postgres:
     image: postgres:15-alpine
     environment:
@@ -327,12 +327,12 @@ async def get_contacts():
 
 ---
 
-## Monitoring
+## Monitoraggio
 
 ### Prometheus + Grafana
 
 ```bash
-# Add to docker-compose.yml
+# Aggiungi a docker-compose.yml
   prometheus:
     image: prom/prometheus:latest
     ports:
@@ -348,7 +348,7 @@ async def get_contacts():
       - GF_SECURITY_ADMIN_PASSWORD=admin
 ```
 
-Access Grafana at `http://localhost:3001`
+Accedi a Grafana su `http://localhost:3001`
 
 ### ELK Stack (Logging)
 
@@ -359,7 +359,7 @@ docker run -d --name elasticsearch -p 9200:9200 docker.elastic.co/elasticsearch/
 # Kibana
 docker run -d --name kibana -p 5601:5601 docker.elastic.co/kibana/kibana:8.0.0
 
-# Logstash (optional)
+# Logstash (opzionale)
 docker run -d --name logstash -p 5000:5000 docker.elastic.co/logstash/logstash:8.0.0
 ```
 
@@ -367,7 +367,7 @@ docker run -d --name logstash -p 5000:5000 docker.elastic.co/logstash/logstash:8
 
 ## Backup & Recovery
 
-### Backup Contacts
+### Backup Contatti
 
 ```bash
 # Daily backup
@@ -440,25 +440,25 @@ deploy:
 
 ---
 
-## Horizontal Scaling
+## Scaling Orizzontale
 
-### Multiple Servers with Load Balancer
+### Multipli Server con Load Balancer
 
 ```
-                    ┌────────────────┐
-                    │ Load Balancer. │
-                    │ (Nginx/HAProxy)│
-                    └────────┬───────┘
+                    ┌─────────────┐
+                    │ Load Balancer
+                    │ (Nginx/HAProxy)
+                    └────────┬────┘
            ┌────────────────┼────────────────┐
            │                │                │
-      ┌────▼─────┐      ┌────▼─────┐      ┌────▼─────┐
+      ┌────▼────┐      ┌────▼────┐      ┌────▼────┐
       │ Server 1 │      │ Server 2 │      │ Server 3 │
       │ PBXDir   │      │ PBXDir   │      │ PBXDir   │
       └──────────┘      └──────────┘      └──────────┘
            │                │                │
            └────────────────┼────────────────┘
                             │
-                       ┌────▼─────┐
+                       ┌────▼────┐
                        │  FreePBX │
                        └──────────┘
 ```
@@ -474,7 +474,7 @@ upstream pbxdir_backend {
 
 server {
     listen 80;
-    server_name directory.internal;
+    server_name rubrica.internal;
     
     location / {
         proxy_pass http://pbxdir_backend;
@@ -486,67 +486,67 @@ server {
 
 ## Troubleshooting Deployment
 
-### Container won't start
+### Container non si avvia
 
 ```bash
-# Check logs
+# Verifica logs
 docker compose logs
 
-# Clean and rebuild
+# Pulisci e ricostruisci
 docker compose down -v
 docker compose up -d --build
 
-# Verify images
+# Verifica immagini
 docker images
 ```
 
-### PBX connection fails
+### Connessione PBX fallisce
 
 ```bash
-# Verify connectivity
+# Verifica connectivity
 docker exec pbx-backend ping 192.168.1.1
 docker exec pbx-backend telnet 192.168.1.1:5038
 
-# Verify DNS
+# Verifica DNS
 docker exec pbx-backend nslookup pbx.internal
 ```
 
 ### Port already in use
 
 ```bash
-# Check ports
+# Verifica porte
 sudo lsof -i :3000
 sudo lsof -i :8000
 
-# Kill process
+# Uccidi processo
 sudo kill -9 <PID>
 
-# Change port in docker-compose.yml
+# Cambia porta in docker-compose.yml
 ```
 
 ---
 
 ## Best Practices
 
-1. ✅ **Use versioned images** (not `latest`)
-2. ✅ **Separate secrets from configuration files**
-3. ✅ **Use health checks** in containers
-4. ✅ **Monitor logs and metrics**
-5. ✅ **Regular backups** of data
-6. ✅ **HTTPS in production**
-7. ✅ **Network segregation** (DMZ for API)
-8. ✅ **Rate limiting** on public endpoints
-9. ✅ **Authentication and authorization**
+1. ✅ **Usa immagini versionate** (non `latest`)
+2. ✅ **Separare secrets dai file di configurazione**
+3. ✅ **Usa health checks** nei container
+4. ✅ **Monitora log e metriche**
+5. ✅ **Backup regolari** dei dati
+6. ✅ **HTTPS in produzione**
+7. ✅ **Segregazione di rete** (DMZ per API)
+8. ✅ **Rate limiting** su endpoint pubblici
+9. ✅ **Autenticazione e autorizzazione**
 10. ✅ **Disaster recovery plan**
 
 ---
 
 ## Support
 
-For deployment issues:
+Per problemi di deployment:
 
-1. Check logs: `docker compose logs -f`
-2. Verify configuration: `cat backend/.env`
+1. Controlla logs: `docker compose logs -f`
+2. Verifica configurazione: `cat backend/.env`
 3. Test API: `curl http://localhost:8000/api/status`
-4. Test PBX connection: `telnet <pbx-ip> 5038`
-5. Read [CONFIG.md](CONFIG.md) for details
+4. Test connessione PBX: `telnet <pbx-ip> 5038`
+5. Leggi [CONFIG.md](CONFIG.md) per dettagli

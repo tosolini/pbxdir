@@ -1,88 +1,84 @@
-# 📁 Struttura Progetto
+# 📁 Project Structure
 
 ```
 pbxdir/
 │
-├── 📚 DOCUMENTAZIONE
-│   ├── README.md              # Overview progetto e indice documentazione
-│   ├── QUICKSTART.md          # ⭐ INIZIO QUI - Guida installazione rapida
-│   ├── CONFIG.md              # Guida configurazione completa
-│   ├── API.md                 # Documentazione REST API endpoints
-│   └── DEPLOYMENT.md          # Guida per deployment in produzione
+├── 📚 DOCUMENTATION
+│   ├── README.md              # Project overview and documentation index
+│   ├── QUICKSTART.md          # ⭐ START HERE - Quick installation guide
+│   ├── CONFIG.md              # Complete configuration guide
+│   ├── API.md                 # REST API endpoints documentation
+│   └── DEPLOYMENT.md          # Production deployment guide
 │
 ├── 🏗️ BACKEND (Python/FastAPI)
-│   ├── Dockerfile             # Container backend
-│   ├── requirements.txt        # Dipendenze Python
-│   ├── config.py              # Configurazione (PBX_HOST, ecc)
-│   ├── main.py                # FastAPI app principale
-│   ├── pbx_manager.py         # Gestione connessione AMI
-│   ├── contacts_manager.py    # Caricamento contatti da JSON
-│   └── numeri.json            # Database contatti (JSON)
+│   ├── Dockerfile             # Backend container
+│   ├── requirements.txt        # Python dependencies
+│   ├── config.py              # Configuration (PBX_HOST, etc)
+│   ├── main.py                # FastAPI main app
+│   ├── pbx_manager.py         # AMI connection management
+│   ├── contacts_manager.py    # Load contacts from JSON
+│   └── numeri.json            # Contacts database (JSON)
 │
 ├── 🎨 FRONTEND (React/Vite)
-│   ├── Dockerfile             # Container frontend (multi-stage)
-│   ├── package.json           # Dipendenze Node.js
-│   ├── vite.config.js         # Config build tool Vite
+│   ├── Dockerfile             # Frontend container (multi-stage)
+│   ├── package.json           # Node.js dependencies
+│   ├── vite.config.js         # Vite build tool config
 │   ├── public/
 │   │   └── index.html         # HTML template
 │   └── src/
-│       ├── main.jsx           # Entry point React
-│       ├── App.jsx            # Component principale
-│       ├── App.css            # Stili app
-│       ├── index.css          # Stili globali + dark mode
-│       └── components/        # Componenti React
-│           ├── Header.jsx/.css       # Intestazione + toggle tema
-│           ├── SearchBar.jsx/.css    # Search e input interno
-│           └── ContactsList.jsx/.css # Lista contatti con pulsanti chiama
+│       ├── main.jsx           # React entry point
+│       ├── App.jsx            # Main component
+│       ├── App.css            # App styles
+│       ├── index.css          # Global styles + dark mode
+│       └── components/        # React components
+│           ├── Header.jsx/.css       # Header + theme toggle
+│           ├── SearchBar.jsx/.css    # Search and internal input
+│           └── ContactsList.jsx/.css # Contact list with call buttons
 │
-├── 🐳 INFRASTRUTTURA
-│   ├── docker-compose.yml     # Orchestrazione container (backend + frontend)
-│   └── .gitignore             # File ignorati da git
-│
-└── 📋 FILE VECCHI (RIMOSSI)
-    └── ❌ start.sh, stop.sh, logs.sh, setup_permissions.sh, test_api.sh
-    └── ❌ FILE_INDEX.md, STRUCTURE.md, FINAL_CHECKLIST.md
-    └── ❌ PROJECT_SUMMARY.txt, SETUP.txt, URLS.txt, Makefile, test_suite.py
+├── 🐳 INFRASTRUCTURE
+│   ├── docker-compose.yml     # Container orchestration (backend + frontend)
+   └── .gitignore             # Git ignore rules
+
 ```
 
-## 📖 Quale File Leggere?
+## 📖 Which File to Read?
 
-| Situazione | File da leggere |
-|-----------|-----------------|
-| **Sono nuovo al progetto** | 📍 [QUICKSTART.md](QUICKSTART.md) |
-| **Devo installare su nuovo server** | 📍 [QUICKSTART.md](QUICKSTART.md) |
-| **Devo configurare PBX/contatti** | [CONFIG.md](CONFIG.md) |
-| **Devo integrare le API** | [API.md](API.md) |
-| **Devo fare deployment in produzione** | [DEPLOYMENT.md](DEPLOYMENT.md) |
-| **Voglio overview del progetto** | [README.md](README.md) |
+| Situation | File to read |
+|-----------|--------------|
+| **I'm new to this project** | 📍 [QUICKSTART.md](QUICKSTART.md) |
+| **I need to install on a new server** | 📍 [QUICKSTART.md](QUICKSTART.md) |
+| **I need to configure PBX/contacts** | [CONFIG.md](CONFIG.md) |
+| **I need to integrate the APIs** | [API.md](API.md) |
+| **I need to deploy to production** | [DEPLOYMENT.md](DEPLOYMENT.md) |
+| **I want a project overview** | [README.md](README.md) |
 
-## 🚀 Comandi Essenziali
+## 🚀 Essential Commands
 
 ```bash
-# Installazione
+# Installation
 docker compose up -d --build
 
 # Stop
 docker compose down
 
-# Log
+# Logs
 docker compose logs -f
 
-# Riavvia
+# Restart
 docker compose restart
 ```
 
-## 🔧 File Importanti da Editare
+## 🔧 Important Files to Edit
 
-1. **`backend/.env`** - Configurazione PBX
+1. **`backend/.env`** - PBX Configuration
    ```env
    PBX_HOST=192.168.1.1
    PBX_PORT=5038
-   PBX_USER=admin
+   PBX_USERNAME=admin
    PBX_PASSWORD=manager
    ```
 
-2. **`backend/numeri.json`** - Contatti
+2. **`backend/numeri.json`** - Contacts
    ```json
    [
      {
@@ -95,12 +91,12 @@ docker compose restart
    ]
    ```
 
-3. **`frontend/src/App.jsx`** - URL API
+3. **`frontend/src/App.jsx`** - API URL
    ```javascript
-   const API_URL = 'http://192.168.1.1:8000'  // Modifica qui se necessario
+   const API_URL = 'http://192.168.1.1:8000'  // Edit here if needed
    ```
 
-## 📊 Architettura High-Level
+## 📊 High-Level Architecture
 
 ```
 ┌─────────────────────────────────────────┐
@@ -125,25 +121,25 @@ docker compose restart
 └─────────────────────────────────────────┘
 ```
 
-## ✅ Checklist Setup
+## ✅ Setup Checklist
 
-- [ ] Docker installato
-- [ ] Repository clonato
-- [ ] `backend/.env` creato
-- [ ] `docker compose up -d --build` eseguito
-- [ ] `http://localhost:3000` accessibile
-- [ ] `/api/status` mostra "connected"
-- [ ] Contatti visibili nella lista
-- [ ] Test chiamata riuscito
+- [ ] Docker installed
+- [ ] Repository cloned
+- [ ] `backend/.env` created
+- [ ] `docker compose up -d --build` executed
+- [ ] `http://localhost:3000` accessible
+- [ ] `/api/status` shows "connected"
+- [ ] Contacts visible in list
+- [ ] Test call successful
 
-## 🎯 Prossimi Passi
+## 🎯 Next Steps
 
-1. Leggi [QUICKSTART.md](QUICKSTART.md)
-2. Installa il progetto sul tuo server
-3. Configura le credenziali FreePBX
-4. Personalizza i contatti
-5. Effettua una prova di chiamata
+1. Read [QUICKSTART.md](QUICKSTART.md)
+2. Install the project on your server
+3. Configure FreePBX credentials
+4. Customize contacts
+5. Test a phone call
 
 ---
 
-**Domande?** Consulta il file `.md` appropriato sopra!
+**Questions?** Consult the appropriate `.md` file above!

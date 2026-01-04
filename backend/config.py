@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     # PBX Settings (OBBLIGATORI - configura in .env)
     PBX_HOST: str
     PBX_PORT: int = 5038
-    PBX_USER: str
+    PBX_USERNAME: str
     PBX_PASSWORD: str
     
     # Application Settings

@@ -1,6 +1,6 @@
 # API Reference
 
-Complete documentation of available REST endpoints.
+Documentazione completa degli endpoint REST disponibili.
 
 ## Base URL
 
@@ -16,7 +16,7 @@ http://localhost:8000
 GET /api/health
 ```
 
-Verifies that the server is running.
+Verifica che il server è in esecuzione.
 
 **Response:**
 ```json
@@ -27,15 +27,15 @@ Verifies that the server is running.
 
 ---
 
-### PBX Status
+### Stato PBX
 
 ```http
 GET /api/status
 ```
 
-Verifies the status of the Asterisk Manager Interface (AMI) connection.
+Verifica lo stato della connessione Asterisk Manager Interface (AMI).
 
-**Response (Connected):**
+**Response (Connesso):**
 ```json
 {
   "status": "connected",
@@ -44,7 +44,7 @@ Verifies the status of the Asterisk Manager Interface (AMI) connection.
 }
 ```
 
-**Response (Disconnected):**
+**Response (Disconnesso):**
 ```json
 {
   "status": "disconnected",
@@ -56,41 +56,41 @@ Verifies the status of the Asterisk Manager Interface (AMI) connection.
 
 ---
 
-### Contacts List
+### Lista Contatti
 
 ```http
 GET /api/contacts
 ```
 
-Retrieves the complete list of contacts from `numeri.json`.
+Recupera la lista completa di contatti da `numeri.json`.
 
 **Response:**
 ```json
 [
   {
     "id": 0,
-    "name": "John Doe [Mobile]",
+    "name": "Tizio [Cellulare]",
     "number": "333111111",
     "office": "043212345",
     "shortInternal": "",
-    "email": "john.admin@company.com",
-    "role": "Administration Office",
+    "email": "tizio.admin@company.com",
+    "role": "Ufficio Amministrazione",
     "department": "Admin"
   },
   {
     "id": 1,
-    "name": "Jane Smith [Switchboard]",
+    "name": "Caio [Centralino]",
     "number": "021234567",
     "shortInternal": "201",
-    "email": "jane.admin@company.com",
-    "role": "Administration Office",
+    "email": "caio.admin@company.com",
+    "role": "Ufficio Amministrazione",
     "department": "Admin"
   }
 ]
 ```
 
 **Query Parameters:**
-- None
+- Nessuno
 
 ---
 
@@ -100,7 +100,7 @@ Retrieves the complete list of contacts from `numeri.json`.
 POST /api/call
 ```
 
-Sends a call request to Asterisk Manager Interface.
+Invia una richiesta di chiamata a Asterisk Manager Interface.
 
 **Request Body:**
 ```json
@@ -111,10 +111,10 @@ Sends a call request to Asterisk Manager Interface.
 ```
 
 **Parameters:**
-- `number` (string, required): Number to call
-- `extension` (string, required): Caller's extension
+- `number` (string, required): Numero da chiamare
+- `extension` (string, required): Interno del chiamante
 
-**Response (Success):**
+**Response (Successo):**
 ```json
 {
   "status": "success",
@@ -127,7 +127,7 @@ Sends a call request to Asterisk Manager Interface.
 }
 ```
 
-**Response (Error):**
+**Response (Errore):**
 ```json
 {
   "status": "error",
@@ -135,34 +135,34 @@ Sends a call request to Asterisk Manager Interface.
 }
 ```
 
-**HTTP Status Codes:**
-- `200`: Call sent successfully
-- `400`: Missing or invalid parameters
-- `503`: PBX unreachable
+**Codici HTTP:**
+- `200`: Chiamata inviata con successo
+- `400`: Parametri mancanti o non validi
+- `503`: PBX non raggiungibile
 
 ---
 
-## cURL Examples
+## Esempi cURL
 
-### Verify Health
+### Verifica Health
 
 ```bash
 curl -X GET http://localhost:8000/api/health
 ```
 
-### Verify PBX Status
+### Verifica Stato PBX
 
 ```bash
 curl -X GET http://localhost:8000/api/status
 ```
 
-### List Contacts
+### Lista Contatti
 
 ```bash
 curl -X GET http://localhost:8000/api/contacts | jq .
 ```
 
-### Originate Call
+### Origina Chiamata
 
 ```bash
 curl -X POST http://localhost:8000/api/call \
@@ -175,34 +175,34 @@ curl -X POST http://localhost:8000/api/call \
 
 ---
 
-## Interactive Documentation
+## Documentazione Interattiva
 
-Access FastAPI Swagger UI:
+Accedi a FastAPI Swagger UI:
 
 ```
 http://localhost:8000/docs
 ```
 
-Here you can test endpoints directly.
+Qui puoi testare direttamente gli endpoint.
 
 ---
 
 ## Error Handling
 
-### Common Errors
+### Errori Comuni
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `Connection refused` | PBX unreachable | Verify IP address and port |
-| `Authentication failed` | Incorrect AMI credentials | Check `.env` |
-| `Extension not found` | Extension not configured | Verify extension in FreePBX |
-| `Channel not available` | Incorrect channel format | Use `SIP/` or `PJSIP/` |
+| Errore | Causa | Soluzione |
+|--------|-------|-----------|
+| `Connection refused` | PBX non raggiungibile | Verifica indirizzo IP e porta |
+| `Authentication failed` | Credenziali AMI errate | Verifica `.env` |
+| `Extension not found` | Interno non configurato | Verifica interno in FreePBX |
+| `Channel not available` | Formato canale errato | Usa `SIP/` o `PJSIP/` |
 
 ---
 
 ## Rate Limiting
 
-Rate limiting is not implemented. For production consider adding:
+Non è implementato rate limiting. In produzione considera di aggiungere:
 
 ```python
 from slowapi import Limiter
@@ -221,7 +221,7 @@ async def originate_call(request: Request, call_data: CallData):
 
 ## CORS
 
-CORS is enabled for all origins in development:
+CORS è abilitato per tutte le origini in development:
 
 ```python
 app.add_middleware(
@@ -233,11 +233,11 @@ app.add_middleware(
 )
 ```
 
-For production, restrict to:
+Per produzione, restringi:
 
 ```python
 allow_origins=[
-    "https://directory.yourdomain.com",
+    "https://rubrica.tuodominio.com",
     "http://localhost:3000"
 ],
 ```
@@ -248,29 +248,29 @@ allow_origins=[
 
 API version: `v1`
 
-Future changes may introduce:
-- `/api/v2/...` for backward compatibility
+Futuri cambiamenti potranno introdurre:
+- `/api/v2/...` per backward compatibility
 
 ---
 
 ## Timeout
 
-- PBX connection timeout: 10 seconds
-- HTTP request timeout: 30 seconds
+- Timeout connessione PBX: 10 secondi
+- Timeout request HTTP: 30 secondi
 
-Modifiable in `pbx_manager.py` if necessary.
+Modificabili in `pbx_manager.py` se necessario.
 
 ---
 
-## Authentication
+## Autenticazione
 
-Currently no authentication is implemented. For production add:
+Attualmente nessuna autenticazione è implementata. Per produzione aggiungi:
 
 - JWT tokens
 - API keys
 - OAuth2
 
-Example JWT:
+Esempio JWT:
 
 ```python
 from fastapi_jwt_auth import AuthJWT

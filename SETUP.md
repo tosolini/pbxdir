@@ -1,57 +1,57 @@
-# 🔧 Setup Iniziale dopo Clone
+# 🔧 Initial Setup After Clone
 
-Dopo aver clonato il repository, segui questi passi:
+After cloning the repository, follow these steps:
 
-## 1. Copia File di Esempio
+## 1. Copy Example Files
 
 ```bash
-# Copia configurazione backend
+# Copy backend configuration
 cp backend/.env.example backend/.env
 
-# Copia database contatti
+# Copy contacts database
 cp numeri.json.example numeri.json
 ```
 
-## 2. Configura Credenziali FreePBX
+## 2. Configure FreePBX Credentials
 
-Modifica `backend/.env`:
+Edit `backend/.env`:
 
 ```bash
 nano backend/.env
 ```
 
-Inserisci i tuoi valori:
+Insert your values:
 
 ```env
-PBX_HOST=<ip-del-tuo-freepbx>
+PBX_HOST=<your-freepbx-ip>
 PBX_PORT=5038
-PBX_USER=<username-ami>
-PBX_PASSWORD=<password-ami>
+PBX_USERNAME=<ami-username>
+PBX_PASSWORD=<ami-password>
 ```
 
-## 3. Configura Contatti
+## 3. Configure Contacts
 
-Modifica `numeri.json`:
+Edit `numeri.json`:
 
 ```bash
 nano numeri.json
 ```
 
-Aggiungi i tuoi contatti seguendo l'esempio in `numeri.json.example`.
+Add your contacts following the example in `numeri.json.example`.
 
-## 4. Avvia l'Applicazione
+## 4. Start the Application
 
 ```bash
 docker compose up -d --build
 ```
 
-## 5. Verifica Funzionamento
+## 5. Verify Functionality
 
 ```bash
-# Controlla container
+# Check containers
 docker compose ps
 
-# Controlla log
+# Check logs
 docker compose logs -f
 
 # Test API
@@ -59,33 +59,33 @@ curl http://localhost:8000/api/health
 curl http://localhost:8000/api/contacts
 ```
 
-## 6. Accedi all'Interfaccia
+## 6. Access the Interface
 
-Apri il browser su: **http://localhost:3000**
-
----
-
-## ⚠️ File da NON Committare
-
-Questi file contengono dati sensibili e sono già nel `.gitignore`:
-
-- `backend/.env` - Credenziali FreePBX
-- `numeri.json` - Contatti con email e numeri personali
-
-Usa sempre i file `.example` come template!
+Open your browser at: **http://localhost:3000**
 
 ---
 
-## 🔐 Sicurezza
+## ⚠️ Files NOT to Commit
 
-Per produzione:
+These files contain sensitive data and are already in `.gitignore`:
 
-1. Usa password robuste per AMI
-2. Limita accesso AMI in FreePBX
-3. Configura firewall per porta 5038
-4. Abilita HTTPS (vedi [DEPLOYMENT.md](DEPLOYMENT.md))
-5. Usa secret management (non .env in plain text)
+- `backend/.env` - FreePBX credentials
+- `numeri.json` - Contacts with emails and personal numbers
+
+Always use the `.example` files as templates!
 
 ---
 
-Vedi [QUICKSTART.md](QUICKSTART.md) per guida completa.
+## 🔐 Security
+
+For production:
+
+1. Use strong passwords for AMI
+2. Limit AMI access in FreePBX
+3. Configure firewall for port 5038
+4. Enable HTTPS (see [DEPLOYMENT.md](DEPLOYMENT.md))
+5. Use secret management (not .env in plain text)
+
+---
+
+See [QUICKSTART.md](QUICKSTART.md) for complete guide.
