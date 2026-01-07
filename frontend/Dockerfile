@@ -8,7 +8,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM python:3.11-alpine
+FROM python:3.14-alpine
 
 WORKDIR /app
 
