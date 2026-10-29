@@ -1,7 +1,7 @@
 fastapi==0.161.1
 uvicorn==0.54.0
-pydantic==2.13.5
-pydantic-settings==2.16.1
+pydantic==2.14.1
+pydantic-settings==2.16.0
 pyst2==0.5.1
 aiohttp==3.14.5
 pyyaml==6.0.3
